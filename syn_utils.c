@@ -6,7 +6,7 @@
 /*   By: ycontre <ycontre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 16:41:32 by ycontre           #+#    #+#             */
-/*   Updated: 2025/03/06 16:43:10 by ycontre          ###   ########.fr       */
+/*   Updated: 2025/03/07 11:30:36 by ycontre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ struct pseudo_header
 
 void preBuildSynPacket(char *packet, const char *src_ip, unsigned short dst_port)
 {
-	memset(packet, 0, 4096);
+	memset(packet, 0, PACKET_SIZE);
 
 	// build IP header
 	struct iphdr *iph = (struct iphdr *) packet;
@@ -165,7 +165,7 @@ int receiveSynResponse(int recv_sock, const char *dst_ip, unsigned short src_por
 		else if (sel == 0)
 			continue ;
 
-		char buffer[4096];
+		char buffer[PACKET_SIZE];
 		struct sockaddr_in src_addr;
 		socklen_t addr_len = sizeof(src_addr);
 		ssize_t data_size = recvfrom(recv_sock, buffer, sizeof(buffer), 0, (struct sockaddr *) &src_addr, &addr_len);
