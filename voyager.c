@@ -6,7 +6,7 @@
 /*   By: ycontre <ycontre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:13:37 by ycontre           #+#    #+#             */
-/*   Updated: 2025/03/07 11:30:27 by ycontre          ###   ########.fr       */
+/*   Updated: 2025/03/07 12:06:27 by ycontre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,9 @@ int voyagerScan(const char *src_ip, const char *dst_ip, unsigned short src_port,
 {
 	static char packet[PACKET_SIZE];
     static unsigned short dst_port = 0;
+    
     if (!dst_port)
     {
-        printf("cc\n");
         dst_port = given_dst_port;
         preBuildSynPacket(packet, src_ip, dst_port);
     }
@@ -66,8 +66,8 @@ int voyagerScan(const char *src_ip, const char *dst_ip, unsigned short src_port,
     return (1);
 }
 
-int voyagerReceive(const char *dst_ip, unsigned short src_port, unsigned short dst_port, double timeout_sec)
+int voyagerReceive(uint32_t start_ip, uint32_t end_ip, unsigned short src_port, unsigned short dst_port, double timeout_sec)
 {
-	int result = receiveSynResponse(recv_sock, dst_ip, src_port, dst_port, timeout_sec);
+	int result = receiveSynResponse(recv_sock, start_ip, end_ip, src_port, dst_port, timeout_sec);
     return (result);
 }

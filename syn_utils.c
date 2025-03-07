@@ -6,7 +6,7 @@
 /*   By: ycontre <ycontre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 16:41:32 by ycontre           #+#    #+#             */
-/*   Updated: 2025/03/07 11:30:36 by ycontre          ###   ########.fr       */
+/*   Updated: 2025/03/07 12:13:23 by ycontre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,7 @@ int sendSynPacket(int send_sock, char *packet, const char *src_ip, const char *d
 	return (1);
 }
 
-int receiveSynResponse(int recv_sock, const char *dst_ip, unsigned short src_port, unsigned short dst_port, double timeout_sec)
+int receiveSynResponse(int recv_sock, uint32_t start_ip, uint32_t end_ip, unsigned short src_port, unsigned short dst_port, double timeout_sec)
 {
 	int sucess_num = 0;
 
@@ -176,25 +176,24 @@ int receiveSynResponse(int recv_sock, const char *dst_ip, unsigned short src_por
 			perror("recvfrom");
 			return (-1);
 		}
-
-		if (src_addr.sin_addr.s_addr != inet_addr(dst_ip))
-			continue ;
-
+		
+		uint32_t host_ip = ntohl(src_addr.sin_addr.s_addr);
+		if (host_ip < start_ip || host_ip > end_ip)
+		continue ;
+		
 		struct iphdr *iph = (struct iphdr *) buffer;
 		int ip_header_len = iph->ihl * 4;
 		if (data_size < ip_header_len + sizeof(struct tcphdr))
-			continue ;
+		continue ;
 		struct tcphdr *tcph = (struct tcphdr *) (buffer + ip_header_len);
-
+		
 		// if (tcph->dest != htons(src_port))
 		// 	continue ;
-
+		
 		if (tcph->syn && tcph->ack)
 		{
 			sucess_num++;
 			continue ;
-			// char ip[30];
-			// strcpy(ip, (char*)inet_ntoa((struct in_addr)src_addr.sin_addr));
 			// return (1);
 		}
 		else if (tcph->rst)

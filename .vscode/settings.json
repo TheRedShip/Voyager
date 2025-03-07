@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "time.h": "c",
+        "netfwd": "c",
+        "voyager.h": "c"
+    }
+}
