@@ -141,8 +141,7 @@ int receiveSynResponse(int recv_sock, uint32_t start_ip, uint32_t end_ip, unsign
 	while (1)
 	{
 		gettimeofday(&now, NULL);
-		double elapsed = (now.tv_sec - start.tv_sec) +
-						 (now.tv_usec - start.tv_usec) / 1000000.0;
+		double elapsed = (now.tv_sec - start.tv_sec) + (now.tv_usec - start.tv_usec) / 1000000.0;
 		if (elapsed >= timeout_sec)
 			break ;
 
@@ -179,23 +178,19 @@ int receiveSynResponse(int recv_sock, uint32_t start_ip, uint32_t end_ip, unsign
 		
 		uint32_t host_ip = ntohl(src_addr.sin_addr.s_addr);
 		if (host_ip < start_ip || host_ip > end_ip)
-		continue ;
+			continue ;
 		
 		struct iphdr *iph = (struct iphdr *) buffer;
 		int ip_header_len = iph->ihl * 4;
 		if (data_size < ip_header_len + sizeof(struct tcphdr))
-		continue ;
+			continue ;
 		struct tcphdr *tcph = (struct tcphdr *) (buffer + ip_header_len);
 		
 		// if (tcph->dest != htons(src_port))
 		// 	continue ;
 		
 		if (tcph->syn && tcph->ack)
-		{
 			sucess_num++;
-			continue ;
-			// return (1);
-		}
 		else if (tcph->rst)
 			continue ;
 	}
