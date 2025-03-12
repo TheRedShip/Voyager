@@ -23,10 +23,11 @@
 # include <netinet/tcp.h>
 # include <errno.h>
 # include <sys/time.h>
-#include <sys/types.h>
-#include <sys/ioctl.h>
-#include <net/if.h>
-#include <pthread.h>
+# include <sys/types.h>
+# include <sys/ioctl.h>
+# include <net/if.h>
+# include <pthread.h>
+# include <stdbool.h>
 
 # define PACKET_SIZE 1024
 
@@ -39,11 +40,18 @@ typedef struct s_scan
 	unsigned short	dst_port;
 }				t_scan;
 
+typedef struct s_receive
+{
+	t_scan			*scan;
+	double			timeout_sec;
+	bool			scan_ended;
+}				t_receive;
+
 int voyagerInit();
 int voyagerScan(const char *src_ip, const char *dst_ip, unsigned short src_port, unsigned short dst_port);
-int voyagerReceive(const char *start_ip, const char *end_ip, unsigned short src_port, unsigned short dst_port, double timeout_sec);
+int voyagerReceive(t_receive *receive);
 
-int receiveSynResponse(int recv_sock, uint32_t start_ip, uint32_t end_ip, unsigned short src_port, unsigned short dst_port, double timeout_sec);
+int receiveSynResponse(int recv_sock, t_receive *receive);
 int sendSynPacket(int send_sock, char *packet, const char *src_ip, const char *dst_ip, unsigned short src_port, unsigned short dst_port);
 void preBuildSynPacket(char *packet, const char *src_ip, unsigned short dst_port);
 

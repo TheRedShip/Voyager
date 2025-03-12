@@ -66,11 +66,8 @@ int voyagerScan(const char *src_ip, const char *dst_ip, unsigned short src_port,
     return (1);
 }
 
-int voyagerReceive(const char *start_ip, const char *end_ip, unsigned short src_port, unsigned short dst_port, double timeout_sec)
+int voyagerReceive(t_receive *receive)
 {
-	uint32_t start = ipToInt(start_ip);
-	uint32_t end = ipToInt(end_ip);
-
-	int result = receiveSynResponse(recv_sock, start, end, src_port, dst_port, timeout_sec);
+	int result = receiveSynResponse(recv_sock, receive);
     return (result);
 }

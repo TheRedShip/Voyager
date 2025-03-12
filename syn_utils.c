@@ -131,15 +131,24 @@ int sendSynPacket(int send_sock, char *packet, const char *src_ip, const char *d
 	return (1);
 }
 
-int receiveSynResponse(int recv_sock, uint32_t start_ip, uint32_t end_ip, unsigned short src_port, unsigned short dst_port, double timeout_sec)
+int receiveSynResponse(int recv_sock, t_receive *receive)
 {
+	uint32_t start_ip = ipToInt(receive->scan->start_ip);
+	uint32_t end_ip = ipToInt(receive->scan->end_ip);
+
+	unsigned short src_port = receive->scan->src_port;
+	unsigned short dst_port = receive->scan->dst_port;
+	
+	float timeout_sec = receive->timeout_sec;
 	int sucess_num = 0;
 
 	struct timeval start, now;
-	gettimeofday(&start, NULL);
 
 	while (1)
 	{
+		if (!receive->scan_ended)
+			gettimeofday(&start, NULL);
+
 		gettimeofday(&now, NULL);
 		double elapsed = (now.tv_sec - start.tv_sec) + (now.tv_usec - start.tv_usec) / 1000000.0;
 		if (elapsed >= timeout_sec)
@@ -190,7 +199,10 @@ int receiveSynResponse(int recv_sock, uint32_t start_ip, uint32_t end_ip, unsign
 		// 	continue ;
 		
 		if (tcph->syn && tcph->ack)
+		{
 			sucess_num++;
+			printf("\rHost %s:%d is up\n", inet_ntoa(src_addr.sin_addr), ntohs(tcph->source));
+		}
 		else if (tcph->rst)
 			continue ;
 	}
