@@ -200,8 +200,8 @@ int receiveSynResponse(int recv_sock, t_receive *receive)
 		
 		if (tcph->syn && tcph->ack)
 		{
-			sucess_num++;
-			printf("\rHost %s:%d is up\n", inet_ntoa(src_addr.sin_addr), ntohs(tcph->source));
+			if (!receive->process_func || receive->process_func(tcph, src_addr))
+				sucess_num++;
 		}
 		else if (tcph->rst)
 			continue ;

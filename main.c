@@ -35,7 +35,7 @@ void *scanRange(void *scan_ptr)
 		fflush(stdout);
 
 		voyagerScan(src_ip, ip_str, src_port + (ip - start), dst_port);
-		// usleep(100);
+		usleep(1000);
 	}
 }
 
@@ -64,8 +64,9 @@ int startScan(const char *src_ip, const char *start_ip, const char *end_ip, unsi
 	scan->dst_port = dst_port;
 
 	receive->scan = scan;
-	receive->timeout_sec = 7.5;
+	receive->timeout_sec = 5.0;
 	receive->scan_ended = false;
+	receive->process_func = processSyn;
 
 	pthread_create(&scan_thread, NULL, scanRange, scan);
 	pthread_create(&receive_thread, NULL, scanReceive, receive);
@@ -76,7 +77,6 @@ int startScan(const char *src_ip, const char *start_ip, const char *end_ip, unsi
 
 	pthread_join(receive_thread, NULL);
 	
-
 	return (0);
 }
 

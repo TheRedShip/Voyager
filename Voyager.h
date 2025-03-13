@@ -45,6 +45,7 @@ typedef struct s_receive
 	t_scan			*scan;
 	double			timeout_sec;
 	bool			scan_ended;
+	bool			(*process_func)(struct tcphdr *, struct sockaddr_in);
 }				t_receive;
 
 int voyagerInit();
@@ -60,6 +61,13 @@ void preBuildSynPacket(char *packet, const char *src_ip, unsigned short dst_port
 
 uint32_t    ipToInt(const char *ip_str);
 void        IntToIp(uint32_t ip, char *buffer);
+
+//
+
+// MC PROTOCOL //
+
+
+bool processSyn(struct tcphdr *tcph, struct sockaddr_in src_addr);
 
 //
 

@@ -58,7 +58,6 @@ int voyagerScan(const char *src_ip, const char *dst_ip, unsigned short src_port,
 		close(recv_sock);
 		return (0);
 	}
-
     
     // close(send_sock);
 	// close(recv_sock);
